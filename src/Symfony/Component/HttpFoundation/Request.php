@@ -189,7 +189,7 @@ class Request
     protected $session;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $locale;
 
