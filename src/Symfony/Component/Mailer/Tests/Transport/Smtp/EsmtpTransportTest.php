@@ -12,7 +12,9 @@
 namespace Symfony\Component\Mailer\Tests\Transport\Smtp;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Mailer\Exception\TransportException;
 use Symfony\Component\Mailer\Transport\Smtp\EsmtpTransport;
+use Symfony\Component\Mime\Email;
 
 class EsmtpTransportTest extends TestCase
 {
@@ -39,5 +41,28 @@ class EsmtpTransportTest extends TestCase
 
         $t = new EsmtpTransport('example.com', 466, true);
         $this->assertEquals('smtps://example.com:466', (string) $t);
+    }
+
+    public function testTypeErrorInMailer()
+    {
+        $transport = new EsmtpTransport(
+            'smtp.mailtrap.io',
+            587,
+            null
+        );
+        $transport->setUsername('foo');
+        $transport->setPassword('bar');
+
+        $message = new Email();
+        $message->from('sender@example.org');
+        $message->addTo('recipient@example.org');
+        $message->text('.');
+
+        try {
+            $transport->send($message);
+            $this->fail('Symfony\Component\Mailer\Exception\TransportException to be thrown');
+        } catch (TransportException $e) {
+            $this->assertStringStartsWith('Failed to authenticate on SMTP server with username "foo" using the following authenticators: "CRAM-MD5", "LOGIN", "PLAIN".', $e->getMessage());
+        }
     }
 }
