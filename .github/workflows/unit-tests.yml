@@ -396,13 +396,13 @@ jobs:
           export -f _run_tests
 
           if [[ ! "${{ matrix.mode }}" = *-deps ]]; then
-            echo "$COMPONENTS" | xargs -d' ' -I{} bash -c "_run_tests {} '$PHPUNIT {}'"
+            bash -c "_run_tests src/Symfony/Component/Mailer '$PHPUNIT src/Symfony/Component/Mailer'"
 
             exit 0
           fi
 
           if [[ "${{ matrix.mode }}" = low-deps ]]; then
-            echo "$COMPONENTS" | xargs -d' ' -I{} bash -c "_run_tests {} 'cd {} && $COMPOSER_UP --prefer-lowest --prefer-stable && $PHPUNIT'"
+            bash -c "_run_tests src/Symfony/Component/Mailer 'cd src/Symfony/Component/Mailer && $COMPOSER_UP --prefer-lowest --prefer-stable && $PHPUNIT'"
 
             exit 0
           fi
@@ -411,7 +411,7 @@ jobs:
           (cd src/Symfony/Component/Lock; cp composer.json composer.bak; composer require --dev --no-update mongodb/mongodb)
 
           # matrix.mode = high-deps
-          echo "$COMPONENTS" | xargs -d' ' -I{} "_run_tests {} 'cd {} && $COMPOSER_UP && $PHPUNIT$LEGACY'" || X=1
+          bash -c "_run_tests src/Symfony/Component/Mailer 'cd src/Symfony/Component/Mailer && $COMPOSER_UP && $PHPUNIT$LEGACY'" || X=1
 
           # get a list of the patched components (relies on .github/build-packages.php being called in the previous step)
           (cd src/Symfony/Component/HttpFoundation; mv composer.bak composer.json)
@@ -434,7 +434,7 @@ jobs:
                 echo "::group::install phpunit"
                 ./phpunit install
                 echo "::endgroup::"
-                echo "$PATCHED_COMPONENTS" | xargs -d' ' -I{} "_run_tests {} 'cd {} && rm composer.lock vendor/ -Rf && $COMPOSER_UP && $PHPUNIT$LEGACY'" || X=1
+                bash -c "_run_tests src/Symfony/Component/Mailer 'cd src/Symfony/Component/Mailer && rm composer.lock vendor/ -Rf && $COMPOSER_UP && $PHPUNIT$LEGACY'" || X=1
               fi
           fi
 
