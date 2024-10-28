@@ -243,7 +243,7 @@ jobs:
     name: PHP ${{ matrix.php }} - Windows
 
     env:
-      extensions: xsl,apcu,igbinary,intl,mbstring,memcached,redis-5.3.4
+      extensions: mongodb,xsl,apcu,igbinary,intl,mbstring,memcached,redis-5.3.4
 
     strategy:
       matrix:
@@ -256,7 +256,7 @@ jobs:
             mode: low-deps
           - php: '8.3'
           - php: '8.4'
-            extensions: amqp,apcu,igbinary,intl,mbstring,memcached,redis
+            extensions: mongodb,xsl,amqp,apcu,igbinary,intl,mbstring,memcached,redis
             #mode: experimental
       fail-fast: false
 
