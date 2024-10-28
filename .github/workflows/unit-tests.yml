@@ -243,7 +243,7 @@ jobs:
     name: PHP ${{ matrix.php }} - Windows
 
     env:
-      extensions: amqp,apcu,igbinary,intl,mbstring,memcached,redis-5.3.4
+      extensions: xsl,apcu,igbinary,intl,mbstring,memcached,redis-5.3.4
 
     strategy:
       matrix:
